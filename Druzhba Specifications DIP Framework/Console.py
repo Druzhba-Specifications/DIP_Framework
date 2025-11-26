@@ -1,7 +1,10 @@
 import os
 
+@staticmethod
 def write(write):
     print(write)
+
+@staticmethod
 def clear():
     try:
         if os.name == 'nt':
