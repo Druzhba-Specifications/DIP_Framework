@@ -4,6 +4,18 @@ DIP_FRAMEWORK_VERSION = 1.0
 
 class computer:
     @staticmethod
+    def sleep():
+        try:
+            if sys.platform.startswith('windows'):
+                subprocess.run(['rundll32.exe', 'powrprof.dll,SetSuspendState', '0,1,0'])
+            elif sys.platform.startswith('linux'):
+                subprocess.run(['systemctl', 'suspend'])
+            elif sys.platform.startswith('macos'):
+                subprocess.run(['pmset', 'sleepnow'])
+        except Exception as e:
+            raise Exception("exception:", e)
+        
+    @staticmethod
     def reboot():
         try:
             if sys.platform.startswith('windows'):
