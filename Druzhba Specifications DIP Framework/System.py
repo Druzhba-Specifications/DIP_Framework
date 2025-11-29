@@ -2,14 +2,26 @@ import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml
 
 DIP_FRAMEWORK_VERSION = 1.0
 
-def shutdown():
-    try:
-        if sys.platform.startswith("windows"):
-            os.system('shutdown /s /t 1')
-        else:
-            subprocess.run(['sudo', 'shutdown', '-h', 'now'])
-    except Exception as e:
-        raise Exception("exception: ", e)
+class computer:
+    @staticmethod
+    def reboot():
+        try:
+            if sys.platform.startswith('windows'):
+                os.system('shutdown /r')
+            else:
+                subprocess.run(['sudo', 'shutdown', '-r', 'now'])
+        except Exception as e:
+            raise Exception("exception: ", e)
+    #added reboot bc ppl are still needing help with ts
+    @staticmethod
+    def shutdown():
+        try:
+            if sys.platform.startswith("windows"):
+                os.system('shutdown /s')
+            else:
+                subprocess.run(['sudo', 'shutdown', '-h', 'now'])
+        except Exception as e:
+            raise Exception("exception: ", e)
 #shutdown made to work multi-platform bc ppl can be too lazy to figure out which one is which
 
 
