@@ -1,2 +1,3 @@
 import System, Console
-System.log("haii")
+System.log("wyd")
+System.computer.sleep()
