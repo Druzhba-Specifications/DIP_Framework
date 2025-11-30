@@ -2,15 +2,23 @@ import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml
 
 DIP_FRAMEWORK_VERSION = 1.0
 
-class sysif:
+class sysIf:
     @staticmethod
     def ifTimeIs(time):
         try:
             if datetime.datetime.time(time):
-                return 'True'
-            else: return 'False'
+                return True
+            else: return False
         except Exception as e:
             return Exception('exception', e)
+    @staticmethod
+    def ifTimeIsBefore(time):
+        try:
+            if time < datetime.datetime.now().time():
+                return True
+            else: return False
+        except Exception as e:
+            return Exception("exception: ", e)
 
 class computer:
     @staticmethod
