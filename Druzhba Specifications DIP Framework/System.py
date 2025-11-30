@@ -72,6 +72,7 @@ class computer:
             retEx(e)
 #shutdown made to work multi-platform bc ppl can be too lazy to figure out which one is which
 
+
 def openlink(url):
     try:
         if sys.platform.startswith("linux"):
