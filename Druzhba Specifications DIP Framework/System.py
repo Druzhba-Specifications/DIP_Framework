@@ -2,23 +2,40 @@ import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml
 
 DIP_FRAMEWORK_VERSION = 1.0
 
+def retEx(e):
+    return Exception("exception: ", e)
+
 class sysIf:
     @staticmethod
     def ifTimeIs(time):
         try:
             if datetime.datetime.time(time):
                 return True
-            else: return False
+            else: 
+                return False
         except Exception as e:
-            return Exception('exception', e)
+            retEx(e)
+
     @staticmethod
     def ifTimeIsBefore(time):
         try:
             if time < datetime.datetime.now().time():
                 return True
-            else: return False
+            else: 
+                return False
         except Exception as e:
-            return Exception("exception: ", e)
+            retEx(e)
+
+    @staticmethod
+    def ifTimeIsAfter(time):
+        try:
+            if time > datetime.datetime.now().time():
+                return True
+            else: 
+                return False
+        except Exception as e:
+            retEx(e)
+            
 
 class computer:
     @staticmethod
@@ -30,8 +47,9 @@ class computer:
                 subprocess.run(['systemctl', 'suspend'])
             elif sys.platform.startswith('macos'):
                 subprocess.run(['pmset', 'sleepnow'])
+            else: retEx("Unsupported Operating System")
         except Exception as e:
-            raise Exception("exception:", e)
+            retEx(e)
     #yet again added sleep so that ppl can easily make computer sleep, might need to be tested on all three, as i own windows but am currently developing in the web
     @staticmethod
     def reboot():
@@ -41,7 +59,7 @@ class computer:
             else:
                 subprocess.run(['sudo', 'shutdown', '-r', 'now'])
         except Exception as e:
-            raise Exception("exception: ", e)
+            retEx(e)
     #added reboot bc ppl are still needing help with ts
     @staticmethod
     def shutdown():
@@ -51,9 +69,8 @@ class computer:
             else:
                 subprocess.run(['sudo', 'shutdown', '-h', 'now'])
         except Exception as e:
-            raise Exception("exception: ", e)
+            retEx(e)
 #shutdown made to work multi-platform bc ppl can be too lazy to figure out which one is which
-
 
 def openlink(url):
     try:
@@ -63,8 +80,10 @@ def openlink(url):
             os.system(f"start {url}")
         elif sys.platform.startswith("macos"):
             os.system(f"open {url}")
+        else:
+            retEx("Unsupported Operating System")
     except Exception as e:
-        raise Exception("exception: ",e)
+        retEx(e)
 
 def info():
     print(f"OS: {sys.platform}, OS VERSION: {platform.platform} DIP FRAMEWORK VERSION: {DIP_FRAMEWORK_VERSION}, CPU TEMP: {psutil.sensors_temperatures()} CPU: {platform.processor()} PYTHON VERSION: {sys.version}")
@@ -80,7 +99,7 @@ def log(log):
                 f.write(f'DIP LOG v{DIP_FRAMEWORK_VERSION} \nLog created {datetime.datetime.now()} \n {datetime.datetime.now()} || {log}\n')
                 f.write(f"{datetime.datetime.now} || {log}\n")
     except Exception as e:
-        raise Exception("An ERRROR! rawr! ", e)
+        retEx(e)
 
 class grabexternal:
 
@@ -94,7 +113,7 @@ class grabexternal:
                     parseddata = json.loads(response.text)
                     return parseddata
                 except Exception as e:
-                    print(f"Exception: {e}")
+                    retEx(e)
             else:
                 raise Exception("Error:", response.status_code)
 
@@ -106,7 +125,7 @@ class grabexternal:
                     parseddata = ET.fromstring(response.text)
                     return parseddata
                 except Exception as e:
-                    print(f"Exception: {e}")
+                    retEx(e)
             else:
                 raise Exception("Error:", response.status_code)
         
@@ -118,7 +137,7 @@ class grabexternal:
                     reader = csv.DictReader(io.StringIO(response.text))
                     return [row for row in reader]
                 except Exception as e:
-                    print(f"Exception: {e}")
+                    retEx(e)
             else:
                 raise Exception("Error:", response.status_code)
         
@@ -130,7 +149,7 @@ class grabexternal:
                     parseddata = yaml.safe_load(response.text)
                     return parseddata
                 except Exception as e:
-                    print(f"Exception: {e}")
+                    retEx(e)
             else:
                 raise Exception("Error:", response.status_code)
 
@@ -147,7 +166,7 @@ class parse:
         except json.JSONDecodeError as e:
             raise Exception("Invalid JSON in file:", e)
         except Exception as e:
-            raise Exception("An ERRROR! rawr! ", e)
+            retEx(e)
 
             #omg im so tired
             #Nick, stop complaining and get back to work
@@ -161,7 +180,7 @@ class parse:
         except FileNotFoundError:
             raise Exception(f"File '{filepath}' not found.")
         except Exception as e:
-            raise Exception("Exception", e)
+            retEx(e)
         except csv.Error as e:
             raise Exception("csv error yoo! ", e)
         
@@ -174,7 +193,7 @@ class parse:
         except FileNotFoundError:
             raise Exception(f"File '{filepath}' not found.")
         except Exception as e:
-            raise Exception("Exception", e)
+            retEx(e)
         except yaml.YAMLError as e:
             raise Exception("yaml error yoo! ", e)
 
@@ -190,4 +209,4 @@ class parse:
         except ET.ParseError as e:
             raise Exception("Invalid XML in file:", e)
         except Exception as e:
-            raise Exception("An ERRROR! rawr! ", e)
+            retEx(e)
