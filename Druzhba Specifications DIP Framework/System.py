@@ -2,6 +2,16 @@ import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml
 
 DIP_FRAMEWORK_VERSION = 1.0
 
+class sysif:
+    @staticmethod
+    def ifTimeIs(time):
+        try:
+            if datetime.datetime.time(time):
+                return 'True'
+            else: return 'False'
+        except Exception as e:
+            return Exception('exception', e)
+
 class computer:
     @staticmethod
     def sleep():
@@ -14,7 +24,7 @@ class computer:
                 subprocess.run(['pmset', 'sleepnow'])
         except Exception as e:
             raise Exception("exception:", e)
-        
+    #yet again added sleep so that ppl can easily make computer sleep, might need to be tested on all three, as i own windows but am currently developing in the web
     @staticmethod
     def reboot():
         try:
@@ -55,12 +65,12 @@ def log(log):
     try:
         if os.path.exists("DIP_Framework\\log.txt"):
             with open("DIP_Framework\\log.txt", "a", encoding="utf-8") as f:
-                f.write(f"{datetime.date} {datetime.time} || {log}\n")
+                f.write(f"{datetime.datetime.now} || {log}\n")
                 
         else:
             with open("DIP_Framework\\log.txt", "w", encoding="utf-8") as f:
                 f.write(f'DIP LOG v{DIP_FRAMEWORK_VERSION} \nLog created {datetime.datetime.now()} \n {datetime.datetime.now()} || {log}\n')
-                f.write(f"{datetime.date} {datetime.time} || {log}\n")
+                f.write(f"{datetime.datetime.now} || {log}\n")
     except Exception as e:
         raise Exception("An ERRROR! rawr! ", e)
 
