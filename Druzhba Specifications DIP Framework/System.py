@@ -24,11 +24,11 @@ class computer:
     @staticmethod
     def sleep():
         try:
-            if sys.platform.startswith('windows'):
-                subprocess.run(['rundll32.exe', 'powrprof.dll,SetSuspendState', '0,1,0'])
+            if sys.platform.startswith('windows') or sys.platform.startswith('win'):
+                subprocess.run(['shutdown', '/h'])
             elif sys.platform.startswith('linux'):
                 subprocess.run(['systemctl', 'suspend'])
-            elif sys.platform.startswith('macos'):
+            elif sys.platform.startswith('darwin'):
                 subprocess.run(['pmset', 'sleepnow'])
         except Exception as e:
             raise Exception("exception:", e)
@@ -61,7 +61,7 @@ def openlink(url):
             os.system(f"xdg-open {url}")
         elif sys.platform.startswith("windows"):
             os.system(f"start {url}")
-        elif sys.platform.startswith("macos"):
+        elif sys.platform.startswith("darwin"):
             os.system(f"open {url}")
     except Exception as e:
         raise Exception("exception: ",e)
