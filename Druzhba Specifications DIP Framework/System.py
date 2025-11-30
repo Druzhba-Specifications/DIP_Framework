@@ -70,15 +70,18 @@ def info():
     print(f"OS: {sys.platform}, OS VERSION: {platform.platform} DIP FRAMEWORK VERSION: {DIP_FRAMEWORK_VERSION}, CPU TEMP: {psutil.sensors_temperatures()} CPU: {platform.processor()} PYTHON VERSION: {sys.version}")
 
 def log(log):
+    log_dir = "DIP_Framework"
+    log_file = os.path.join(log_dir, "log.txt")
+    os.makedirs(log_dir, exist_ok=True)
     try:
-        if os.path.exists("DIP_Framework\\log.txt"):
-            with open("DIP_Framework\\log.txt", "a", encoding="utf-8") as f:
-                f.write(f"{datetime.datetime.now} || {log}\n")
+        if os.path.exists(log_file):
+            with open(log_file, "a", encoding="utf-8") as f:
+                f.write(f"{datetime.datetime.now()} || {log}\n")
                 
         else:
-            with open("DIP_Framework\\log.txt", "w", encoding="utf-8") as f:
+            with open(log_file, "w", encoding="utf-8") as f:
                 f.write(f'DIP LOG v{DIP_FRAMEWORK_VERSION} \nLog created {datetime.datetime.now()} \n {datetime.datetime.now()} || {log}\n')
-                f.write(f"{datetime.datetime.now} || {log}\n")
+                f.write(f"{datetime.datetime.now()} || {log}\n")
     except Exception as e:
         raise Exception("An ERRROR! rawr! ", e)
 
