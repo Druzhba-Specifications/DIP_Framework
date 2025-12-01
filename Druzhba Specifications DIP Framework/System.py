@@ -1,7 +1,9 @@
 import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, time, io, psutil, platform, subprocess
 
 DIP_FRAMEWORK_VERSION = 1.0
-
+time = datetime.datetime.now().time()
+date = datetime.datetime.now().date()
+#im too lazy to implement, please someone implement
 def retEx(e):
     return Exception("exception: ", e)
 
