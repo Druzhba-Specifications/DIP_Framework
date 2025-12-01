@@ -1,2 +1,2 @@
 import System, Console
-System.computer.reboot()
+System.log("haii")
