@@ -1,13 +1,31 @@
 import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, time, io, psutil, platform, subprocess
 
 DIP_FRAMEWORK_VERSION = 1.0
-time = datetime.datetime.now().time() #time variable so i don't have to write full thing
-date = datetime.datetime.now().date() #same as above, but for the date.
+
+time_var = datetime.datetime.now().time() #added/implemented all variables to make my(our) life easier
+date_var = datetime.datetime.now().date()
+date_now = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S %p")
 
 #im too lazy to implement, please someone implement
 
 def retEx(e):
     return Exception("exception: ", e)
+
+def module(module, moduledir):
+    try:
+        module = "{module}.py"
+        if moduledir != "":
+            module_path = os.path.join("modules", moduledir, module)
+        else:
+            module_path = os.path.join("modules", module)
+        try:
+            if os.path.exists(module_path):
+                with open(module_path, "r") as f:
+                    exec(f.read())
+        except Exception as e:
+            retEx(e)
+    except Exception as e:
+        retEx(e)
 
 class sysIf:
     @staticmethod
@@ -23,7 +41,7 @@ class sysIf:
     @staticmethod
     def ifTimeIsBefore(time):
         try:
-            if time < datetime.datetime.now().time():
+            if time < time_var :
                 return True
             else: 
                 return False
@@ -33,7 +51,7 @@ class sysIf:
     @staticmethod
     def ifTimeIsAfter(time):
         try:
-            if time > datetime.datetime.now().time():
+            if time > time_var:
                 return True
             else: 
                 return False
@@ -54,7 +72,7 @@ class computer:
             else: retEx("Unsupported Operating System")
         except Exception as e:
             retEx(e)
-    #yet again added sleep so that ppl can easily make computer sleep, might need to be tested on all three, as i own windows but am currently developing in the web
+    #yet again added sleep so that ppl can easily make computer sleep, might need to be tested on all three, as I own windows but am currently developing in the web
     @staticmethod
     def reboot():
         try:
@@ -100,12 +118,12 @@ def log(log):
     try:
         if os.path.exists(log_file):
             with open(log_file, "a", encoding="utf-8") as f:
-                f.write(f"{datetime.datetime.now()} || {log}\n")
+                f.write(f"{date_now} || {log}\n")
                 
         else:
             with open(log_file, "w", encoding="utf-8") as f:
-                f.write(f'DIP LOG v{DIP_FRAMEWORK_VERSION} \nLog created {datetime.datetime.now()} \n {datetime.datetime.now()} || {log}\n')
-                f.write(f"{datetime.datetime.now()} || {log}\n")
+                f.write(f'DIP LOG v{DIP_FRAMEWORK_VERSION} \nLog created {date_now} \n {date_now} || {log}\n')
+                f.write(f"{date_now} || {log}\n")
     except Exception as e:
         retEx(e)
 
@@ -175,9 +193,6 @@ class parse:
             raise Exception("Invalid JSON in file:", e)
         except Exception as e:
             retEx(e)
-
-            #omg im so tired
-            #Nick, stop complaining and get back to work
 
     @staticmethod
     def csv(filepath):
