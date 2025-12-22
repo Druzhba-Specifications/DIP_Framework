@@ -272,5 +272,5 @@ class internet:
     @staticmethod
     def convert_currency(amount, origional_currency, converted_currency):
         result = client.latest()
-        result = result.get('data', {})
+        result = result.get('data', {}).get(converted_currency.upper)
         return float(amount) * float(result)
