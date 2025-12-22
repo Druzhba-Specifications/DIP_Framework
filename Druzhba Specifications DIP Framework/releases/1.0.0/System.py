@@ -1,9 +1,14 @@
-import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, time, io, psutil, platform, subprocess
+import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc, freecurrencyapi, urllib
+from playsound3 import playsound
+from plyer import notification
 
 DIP_FRAMEWORK_VERSION = 1.0
-time = datetime.datetime.now().time()
-date = datetime.datetime.now().date()
-#im too lazy to implement, please someone implement
+
+client = freecurrencyapi.Client('fca_live_Wka6rbO1pD7fslnGeLLxUkhczd94oC0BfGzIK7fL')
+
+time_var = datetime.datetime.now().time() #added/implemented all variables to make my(our) life easier
+date_var = datetime.datetime.now().date()
+date_now = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S %p")
 def retEx(e):
     return Exception("exception: ", e)
 
@@ -13,7 +18,7 @@ class sysIf:
         try:
             if datetime.datetime.time(time):
                 return True
-            else: 
+            else:
                 return False
         except Exception as e:
             retEx(e)
@@ -23,7 +28,7 @@ class sysIf:
         try:
             if time < datetime.datetime.now().time():
                 return True
-            else: 
+            else:
                 return False
         except Exception as e:
             retEx(e)
@@ -33,13 +38,75 @@ class sysIf:
         try:
             if time > datetime.datetime.now().time():
                 return True
-            else: 
+            else:
                 return False
         except Exception as e:
             retEx(e)
-            
+
 
 class computer:
+    class file:
+        @staticmethod
+        def read_file(path):
+            try:
+                if computer.file.ensure_dir(path, False):
+                    with open(path, "r", encoding="utf-8") as f:
+                        return f.read
+                else:
+                    return None
+            except Exception as e:
+                retEx(e)
+        @staticmethod
+        def write_file(path, content):
+            try:
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(content)
+            except Exception as e:
+                retEx(e)
+        @staticmethod
+        def ensure_dir(directory, answer):
+            try:
+                if os.path.exists(directory):
+                    return True
+                else:
+                    if answer == True:
+                        os.makedirs(directory)
+                        return True
+                    else:
+                        return False
+            except Exception as e:
+                retEx(e)
+
+    @staticmethod
+    def notify(title, message, appname, duration):
+        notification.notify(
+            title=title,
+            message=message,
+            app_name=appname,
+            timeout='10'
+        )
+    @staticmethod
+    def playsound(location):
+        try:
+            playsound(location)
+        except Exception as e:
+            retEx(e)
+    @staticmethod
+    def playvideo(location):
+        try:
+            instance = vlc.Instance()
+            player = instance.media_player_new()
+            media = instance.media_new(location)
+            player.set_media(media)
+            player.play()
+
+            # DO NOT REMOVE! KEEPS SCRIPT RUNNING WHILE VIDEO PLAYING TO NOT
+            # STOP SCRIPT, BUT CAN BE DISABLED BY PUTTING "disable" INTO THE
+            # SECOND PROMPT
+            while player.is_playing():
+                 time.sleep(1)
+        except Exception as e:
+            retEx(e)
     @staticmethod
     def sleep():
         try:
@@ -52,7 +119,8 @@ class computer:
             else: retEx("Unsupported Operating System")
         except Exception as e:
             retEx(e)
-    #yet again added sleep so that ppl can easily make computer sleep, might need to be tested on all three, as i own windows but am currently developing in the web
+    #yet again added sleep so that ppl can easily make computer sleep,
+    # might need to be tested on all three, as I own windows but am currently developing in the web
     @staticmethod
     def reboot():
         try:
@@ -72,7 +140,8 @@ class computer:
                 subprocess.run(['sudo', 'shutdown', '-h', 'now'])
         except Exception as e:
             retEx(e)
-#shutdown made to work multi-platform bc ppl can be too lazy to figure out which one is which
+#shutdown made to work multi-platform bc ppl can be too lazy
+#to figure out which one is which
 
 
 def openlink(url):
@@ -99,7 +168,7 @@ def log(log):
         if os.path.exists(log_file):
             with open(log_file, "a", encoding="utf-8") as f:
                 f.write(f"{datetime.datetime.now()} || {log}\n")
-                
+
         else:
             with open(log_file, "w", encoding="utf-8") as f:
                 f.write(f'DIP LOG v{DIP_FRAMEWORK_VERSION} \nLog created {datetime.datetime.now()} \n {datetime.datetime.now()} || {log}\n')
@@ -134,7 +203,7 @@ class grabexternal:
                     retEx(e)
             else:
                 raise Exception("Error:", response.status_code)
-        
+
         @staticmethod
         def csv(url):
             response = requests.get(url)
@@ -146,7 +215,7 @@ class grabexternal:
                     retEx(e)
             else:
                 raise Exception("Error:", response.status_code)
-        
+
         @staticmethod
         def yaml(url):
             response = requests.get(url)
@@ -185,11 +254,11 @@ class parse:
                 return [row for row in reader]
         except FileNotFoundError:
             raise Exception(f"File '{filepath}' not found.")
-        except Exception as e:
-            retEx(e)
         except csv.Error as e:
             raise Exception("csv error yoo! ", e)
-        
+        except Exception as e:
+            retEx(e)
+
     @staticmethod
     def yaml(filepath):
         try:
@@ -198,10 +267,10 @@ class parse:
                 return parseddata
         except FileNotFoundError:
             raise Exception(f"File '{filepath}' not found.")
-        except Exception as e:
-            retEx(e)
         except yaml.YAMLError as e:
             raise Exception("yaml error yoo! ", e)
+        except Exception as e:
+            retEx(e)
 
     @staticmethod
     def xml(filepath):
@@ -216,3 +285,17 @@ class parse:
             raise Exception("Invalid XML in file:", e)
         except Exception as e:
             retEx(e)
+
+class internet:
+    @staticmethod
+    def extract_domain(url):
+        try:
+            return urllib.parse.urlparse(url)
+
+        except Exception as e:
+            retEx(e)
+    @staticmethod
+    def convert_currency(amount, origional_currency, converted_currency):
+        result = client.latest()
+        result = result.get('data', {}).get(converted_currency.upper)
+        return float(amount) * float(result)
