@@ -1,8 +1,10 @@
-import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc
+import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc, freecurrencyapi
 from playsound3 import playsound
 from plyer import notification
 
 DIP_FRAMEWORK_VERSION = 1.0
+
+client = freecurrencyapi.Client('fca_live_Wka6rbO1pD7fslnGeLLxUkhczd94oC0BfGzIK7fL')
 
 time_var = datetime.datetime.now().time() #added/implemented all variables to make my(our) life easier
 date_var = datetime.datetime.now().date()
@@ -265,3 +267,10 @@ class parse:
             raise Exception("Invalid XML in file:", e)
         except Exception as e:
             retEx(e)
+
+class internet:
+    @staticmethod
+    def convert_currency(amount, origional_currency, converted_currency):
+        result = client.latest()
+        result = result.get('data', {})
+        return float(amount) * float(result)
