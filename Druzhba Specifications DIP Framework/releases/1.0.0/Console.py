@@ -1,10 +1,5 @@
 import os
 
-@staticmethod
-def write(write):
-    print(write)
-
-@staticmethod
 def clear():
     try:
         if os.name == 'nt':
@@ -12,5 +7,5 @@ def clear():
         else:
             os.system('clear')
     except Exception as e:
-        raise print(e)
+        raise Exception(e)
     
