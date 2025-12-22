@@ -1,3 +1,4 @@
 import System, Console, time
-System.computer.playsound("D:\\Alex\\Downloads\\kick-hardstyle-149795.mp3")
-System.computer.playvideo("D:\\Alex\\Downloads\\IMG_0118.mov")
+System.computer.notify('hi', 'wyd', 'NOTIFIER', '1')
+time.sleep(1)
+print(System.computer.ensure_dir('home/Desktop/gertrude', False))

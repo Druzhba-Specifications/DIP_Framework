@@ -1,5 +1,6 @@
 import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc
 from playsound3 import playsound
+from plyer import notification
 
 DIP_FRAMEWORK_VERSION = 1.0
 
@@ -43,6 +44,28 @@ class sysIf:
 
 class computer:
     @staticmethod
+    def ensure_dir(directory, answer):
+        try:
+            if os.path.exists(directory):
+                return True
+            else:
+                if answer == True:
+                    os.makedirs(directory)
+                    return True
+                else:
+                    return False
+        except Exception as e:
+            retEx(e)
+
+    @staticmethod
+    def notify(title, message, appname, duration):
+        notification.notify(
+            title=title,
+            message=message,
+            app_name=appname,
+            timeout='10'
+        )
+    @staticmethod
     def playsound(location):
         try:
             playsound(location)
@@ -57,7 +80,7 @@ class computer:
             player.set_media(media)
             player.play()
 
-            #DO NOT REMOVE! KEEPS SCRIPT RUNNING WHILE VIDEO PLAYING TO NOT
+            # DO NOT REMOVE! KEEPS SCRIPT RUNNING WHILE VIDEO PLAYING TO NOT
             # STOP SCRIPT, BUT CAN BE DISABLED BY PUTTING "disable" INTO THE
             # SECOND PROMPT
             while player.is_playing():
