@@ -1,18 +1,11 @@
 import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc
-from playsound import playsound
+from playsound3 import playsound
 
 DIP_FRAMEWORK_VERSION = 1.0
-<<<<<<< Updated upstream
-time = datetime.datetime.now().time()
-date = datetime.datetime.now().date()
-#im too lazy to implement, please someone implement
-=======
 
 time_var = datetime.datetime.now().time() #added/implemented all variables to make my(our) life easier
 date_var = datetime.datetime.now().date()
 date_now = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S %p")
-
->>>>>>> Stashed changes
 def retEx(e):
     return Exception("exception: ", e)
 
@@ -83,12 +76,8 @@ class computer:
             else: retEx("Unsupported Operating System")
         except Exception as e:
             retEx(e)
-<<<<<<< Updated upstream
-    #yet again added sleep so that ppl can easily make computer sleep, might need to be tested on all three, as i own windows but am currently developing in the web
-=======
     #yet again added sleep so that ppl can easily make computer sleep,
     # might need to be tested on all three, as I own windows but am currently developing in the web
->>>>>>> Stashed changes
     @staticmethod
     def reboot():
         try:
