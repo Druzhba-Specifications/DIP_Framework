@@ -1,4 +1,4 @@
-import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc, freecurrencyapi
+import datetime, sys, os, json, requests, xml.etree.ElementTree as ET, csv, yaml, io, psutil, platform, subprocess, time, vlc, freecurrencyapi, urllib
 from playsound3 import playsound
 from plyer import notification
 
@@ -45,19 +45,37 @@ class sysIf:
 
 
 class computer:
-    @staticmethod
-    def ensure_dir(directory, answer):
-        try:
-            if os.path.exists(directory):
-                return True
-            else:
-                if answer == True:
-                    os.makedirs(directory)
+    class file:
+        @staticmethod
+        def read_file(path):
+            try:
+                if computer.file.ensure_dir(path, False):
+                    with open(path, "r", encoding="utf-8") as f:
+                        return f.read
+                else:
+                    return None
+            except Exception as e:
+                retEx(e)
+        @staticmethod
+        def write_file(path, content):
+            try:
+                with open(path, "w", encoding="utf-8") as f:
+                    f.write(content)
+            except Exception as e:
+                retEx(e)
+        @staticmethod
+        def ensure_dir(directory, answer):
+            try:
+                if os.path.exists(directory):
                     return True
                 else:
-                    return False
-        except Exception as e:
-            retEx(e)
+                    if answer == True:
+                        os.makedirs(directory)
+                        return True
+                    else:
+                        return False
+            except Exception as e:
+                retEx(e)
 
     @staticmethod
     def notify(title, message, appname, duration):
@@ -269,6 +287,13 @@ class parse:
             retEx(e)
 
 class internet:
+    @staticmethod
+    def extract_domain(url):
+        try:
+            return urllib.parse.urlparse(url)
+
+        except Exception as e:
+            retEx(e)
     @staticmethod
     def convert_currency(amount, origional_currency, converted_currency):
         result = client.latest()
