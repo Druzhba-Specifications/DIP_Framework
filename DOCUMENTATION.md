@@ -1397,6 +1397,6 @@ We welcome contributions! See README.md for contribution guidelines.
 
 **DIP Framework v1.0 Documentation**
 
-*Last Updated: December 2024*
+*Last Updated: December 2025*
 
 **Made with ❤️ by the Druzhba Specifications team**
