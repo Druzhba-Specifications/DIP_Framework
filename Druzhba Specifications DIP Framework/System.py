@@ -46,23 +46,46 @@ class sysIf:
 
 class computer:
     class file:
-        @staticmethod
-        def read_file(path):
-            try:
-                if computer.file.ensure_dir(path, False):
-                    with open(path, "r", encoding="utf-8") as f:
-                        return f.read
-                else:
-                    return None
-            except Exception as e:
-                retEx(e)
-        @staticmethod
-        def write_file(path, content):
-            try:
+        class write:
+            @staticmethod
+            def write_file(filepath, content):
+                try:
+                    with open(filepath, "w", encoding="utf-8") as f:
+                        f.write(content)
+                except Exception as e:
+                    retEx(e)
+            @staticmethod
+            def write_json(path, json_data):
                 with open(path, "w", encoding="utf-8") as f:
-                    f.write(content)
-            except Exception as e:
-                retEx(e)
+                    f.write(json.dump(json_data, f))
+            @staticmethod
+            def write_csv(path, csv_data):
+                with open(path, "w", encoding="utf-8") as f:
+                    csv_writer = csv.writer(f, delimiter=',')
+                    for row in csv_data:
+                        csv_writer.writerow(row)
+                        #Data is meant to be saved like this in this framework:
+                        #data = [
+                        #['Name', 'Department', 'Birthday Month'],
+                        #['John Smith', 'Accounting', 'November'],
+                        #['Erica Meyers', 'IT', 'March']
+                        #]
+            @staticmethod
+            def write_yaml(path, yaml_data):
+                with open(path, 'w', encoding="utf-8") as f:
+                    f.write(yaml.dump(yaml_data, f, default_flow_style=False))
+
+        class read:
+            @staticmethod
+            def read_file(path):
+                try:
+                    if computer.file.ensure_dir(path, False):
+                        with open(path, "r", encoding="utf-8") as f:
+                            return f.read
+                    else:
+                        return None
+                except Exception as e:
+                    retEx(e)
         @staticmethod
         def ensure_dir(directory, answer):
             try:
@@ -78,7 +101,7 @@ class computer:
                 retEx(e)
 
     @staticmethod
-    def notify(title, message, appname, duration):
+    def notify(title, message, appname):
         notification.notify(
             title=title,
             message=message,
@@ -144,7 +167,7 @@ class computer:
 #to figure out which one is which
 
 
-def openlink(url):
+def openbrowserlink(url):
     try:
         if sys.platform.startswith("linux"):
             os.system(f"xdg-open {url}")
@@ -229,62 +252,62 @@ class grabexternal:
                 raise Exception("Error:", response.status_code)
 
 class parse:
+    class file:
+        @staticmethod
+        def json(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as file:
+                    parseddata = json.load(file)
+                    return parseddata
+            except FileNotFoundError:
+                raise Exception(f"File '{filepath}' not found.")
+            except json.JSONDecodeError as e:
+                raise Exception("Invalid JSON in file:", e)
+            except Exception as e:
+                retEx(e)
 
-    @staticmethod
-    def json(filepath):
-        try:
-            with open(filepath, "r", encoding="utf-8") as file:
-                parseddata = json.load(file)
-                return parseddata
-        except FileNotFoundError:
-            raise Exception(f"File '{filepath}' not found.")
-        except json.JSONDecodeError as e:
-            raise Exception("Invalid JSON in file:", e)
-        except Exception as e:
-            retEx(e)
+                #omg im so tired
+                #Nick, stop complaining and get back to work
 
-            #omg im so tired
-            #Nick, stop complaining and get back to work
+        @staticmethod
+        def csv(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as file:
+                    reader = csv.DictReader(file)
+                    return [row for row in reader]
+            except FileNotFoundError:
+                raise Exception(f"File '{filepath}' not found.")
+            except csv.Error as e:
+                raise Exception("csv error yoo! ", e)
+            except Exception as e:
+                retEx(e)
 
-    @staticmethod
-    def csv(filepath):
-        try:
-            with open(filepath, "r", encoding="utf-8") as file:
-                reader = csv.DictReader(file)
-                return [row for row in reader]
-        except FileNotFoundError:
-            raise Exception(f"File '{filepath}' not found.")
-        except csv.Error as e:
-            raise Exception("csv error yoo! ", e)
-        except Exception as e:
-            retEx(e)
+        @staticmethod
+        def yaml(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as file:
+                    parseddata = yaml.safe_load(file)
+                    return parseddata
+            except FileNotFoundError:
+                raise Exception(f"File '{filepath}' not found.")
+            except yaml.YAMLError as e:
+                raise Exception("yaml error yoo! ", e)
+            except Exception as e:
+                retEx(e)
 
-    @staticmethod
-    def yaml(filepath):
-        try:
-            with open(filepath, "r", encoding="utf-8") as file:
-                parseddata = yaml.safe_load(file)
-                return parseddata
-        except FileNotFoundError:
-            raise Exception(f"File '{filepath}' not found.")
-        except yaml.YAMLError as e:
-            raise Exception("yaml error yoo! ", e)
-        except Exception as e:
-            retEx(e)
-
-    @staticmethod
-    def xml(filepath):
-        try:
-            with open(filepath, "r", encoding="utf-8") as file:
-                content = file.read()
-                parseddata = ET.fromstring(content)
-                return parseddata
-        except FileNotFoundError:
-            raise Exception(f"File '{filepath}' not found.")
-        except ET.ParseError as e:
-            raise Exception("Invalid XML in file:", e)
-        except Exception as e:
-            retEx(e)
+        @staticmethod
+        def xml(filepath):
+            try:
+                with open(filepath, "r", encoding="utf-8") as file:
+                    content = file.read()
+                    parseddata = ET.fromstring(content)
+                    return parseddata
+            except FileNotFoundError:
+                raise Exception(f"File '{filepath}' not found.")
+            except ET.ParseError as e:
+                raise Exception("Invalid XML in file:", e)
+            except Exception as e:
+                retEx(e)
 
 class internet:
     @staticmethod
