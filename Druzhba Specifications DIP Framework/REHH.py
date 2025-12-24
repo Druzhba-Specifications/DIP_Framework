@@ -38,13 +38,13 @@ def start_rehh(location):
                     HTML = f.read()
             except Exception as e:
                 System.retEx(e)
-                if Details: print(f"Serving files from {HTML} at http://localhost:{PORT}")
-                try:
-                    HTTPServer(("localhost", int(PORT)), SimpleHandler).serve_forever()
-                except KeyboardInterrupt:
-                    if Details: print(f"\nClosing server on http://localhost:{PORT}")
-        elif root.get('loc') == 'webdoc':
-            HTML = root.find('html')
+            if Details: print(f"Serving files from {HTML} at http://localhost:{PORT}")
+            try:
+                HTTPServer(("localhost", int(PORT)), SimpleHandler).serve_forever()
+            except KeyboardInterrupt:
+                if Details: print(f"\nClosing server on http://localhost:{PORT}")
+        elif root.find('loc').text == 'webdoc':
+            HTML = root.find('html').text
             print(HTML)
             if Details == True:
                 print(f"Serving files at http://localhost:{PORT}")
@@ -53,6 +53,6 @@ def start_rehh(location):
             except KeyboardInterrupt:
                 if Details: print(f"\nClosing server on http://localhost:{PORT}")
         else:
-            System.retEx("You must define if html file is either locate here (thisloc) or on a web place (webloc). Please look at the example XML file provided to build file for hosting.")
+            System.retEx("You must define if html file is either locate here (diffloc) or on a web place (webdoc). Please look at the example XML file provided to build file for hosting.")
     except Exception as e:
         System.retEx(e)
