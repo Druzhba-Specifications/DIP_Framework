@@ -1,2 +1,4 @@
-import System, Console, time
-print(System.internet.convert_currency(33,'USD','EUR'))
+import System, Console, time, REHH
+REHH.start_rehh("/home/Alex/rehhtest.xml")
+while True:
+    continue

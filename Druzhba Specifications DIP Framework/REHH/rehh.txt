@@ -1,0 +1,25 @@
+
+
+RRRRRRRRRRRRRRRRR   EEEEEEEEEEEEEEEEEEEEEEHHHHHHHHH     HHHHHHHHHHHHHHHHHH     HHHHHHHHH
+R::::::::::::::::R  E::::::::::::::::::::EH:::::::H     H:::::::HH:::::::H     H:::::::H
+R::::::RRRRRR:::::R E::::::::::::::::::::EH:::::::H     H:::::::HH:::::::H     H:::::::H
+RR:::::R     R:::::REE::::::EEEEEEEEE::::EHH::::::H     H::::::HHHH::::::H     H::::::HH
+  R::::R     R:::::R  E:::::E       EEEEEE  H:::::H     H:::::H    H:::::H     H:::::H
+  R::::R     R:::::R  E:::::E               H:::::H     H:::::H    H:::::H     H:::::H
+  R::::RRRRRR:::::R   E::::::EEEEEEEEEE     H::::::HHHHH::::::H    H::::::HHHHH::::::H
+  R:::::::::::::RR    E:::::::::::::::E     H:::::::::::::::::H    H:::::::::::::::::H
+  R::::RRRRRR:::::R   E:::::::::::::::E     H:::::::::::::::::H    H:::::::::::::::::H
+  R::::R     R:::::R  E::::::EEEEEEEEEE     H::::::HHHHH::::::H    H::::::HHHHH::::::H
+  R::::R     R:::::R  E:::::E               H:::::H     H:::::H    H:::::H     H:::::H
+  R::::R     R:::::R  E:::::E       EEEEEE  H:::::H     H:::::H    H:::::H     H:::::H
+RR:::::R     R:::::REE::::::EEEEEEEE:::::EHH::::::H     H::::::HHHH::::::H     H::::::HH
+R::::::R     R:::::RE::::::::::::::::::::EH:::::::H     H:::::::HH:::::::H     H:::::::H
+R::::::R     R:::::RE::::::::::::::::::::EH:::::::H     H:::::::HH:::::::H     H:::::::H
+RRRRRRRR     RRRRRRREEEEEEEEEEEEEEEEEEEEEEHHHHHHHHH     HHHHHHHHHHHHHHHHHH     HHHHHHHHH
+
+
+REHH, Or Really Easy Http Hosting, is a compact module made by Druzhba Specifications to easily host html/php files in an easy way, and thus REHH is born.
+
+REHH
+Version    Release Date         Tested?     Release or Beta?
+0.03       December 24, 2025    Yes         Beta
