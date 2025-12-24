@@ -8,24 +8,45 @@ A comprehensive guide to all features, functions, and capabilities of the DIP Fr
 
 ## Table of Contents
 
+### Getting Started
 1. [Introduction](#introduction)
 2. [Installation](#installation)
-3. [Console Module](#console-module)
-4. [System Module](#system-module)
-5. [Time Checking](#time-checking)
-6. [Computer Control](#computer-control)
-7. [Media Playback](#media-playback)
-8. [Desktop Notifications](#desktop-notifications)
-9. [File Operations](#file-operations-1)
-10. [Currency Conversion](#currency-conversion-1)
-11. [Internet Utilities](#internet-utilities)
-12. [Data Parsing](#data-parsing)
-13. [Logging System](#logging-system)
-14. [Best Practices](#best-practices)
-15. [Troubleshooting](#troubleshooting)
-16. [Platform Support](#platform-support)
+3. [Quick Reference](#quick-reference)
+
+### Core Modules
+4. [Console Module](#console-module)
+5. [System Module](#system-module)
+6. [REHH Module (Beta)](#rehh-module)
+
+### System Features
+7. [Time Checking](#time-checking)
+8. [Computer Control](#computer-control)
+9. [System Information](#system-information)
+10. [Logging System](#logging-system)
+
+### File & Data
+11. [File Operations](#file-operations)
+12. [Data Parsing - Local Files](#data-parsing---local-files)
+13. [Data Parsing - External URLs](#data-parsing---external-urls)
+
+### Media & Notifications
+14. [Media Playback](#media-playback)
+15. [Desktop Notifications](#desktop-notifications)
+
+### Internet & Web
+16. [URL Operations](#url-operations)
+17. [Currency Conversion](#currency-conversion)
+18. [Internet Utilities](#internet-utilities)
+
+### Reference
+19. [Best Practices](#best-practices)
+20. [Troubleshooting](#troubleshooting)
+21. [Platform Support](#platform-support)
+22. [API Quick Reference](#api-quick-reference)
 
 ---
+
+# Getting Started
 
 ## Introduction
 
@@ -93,6 +114,7 @@ System.computer.shutdown()  # Works everywhere!
 - Currency conversion
 - URL parsing
 - Persistent logging
+- Simple web hosting (REHH - beta)
 
 ---
 
@@ -109,20 +131,102 @@ System.computer.shutdown()  # Works everywhere!
 pip install psutil requests pyyaml playsound3 python-vlc plyer freecurrencyapi
 ```
 
+### Getting DIP Framework
+
+**Option 1: Stable Release (Recommended)**
+
+Download from the [Releases page](https://github.com/Druzhba-Specifications/DIP_Framework/releases):
+1. Go to the releases page
+2. Download the latest release (e.g., `v1.0.0-pre.1.zip`)
+3. Extract the files to your project directory
+
+**Includes:** All stable features (System, Console modules)  
+**Does NOT include:** Beta features like REHH module
+
+**Option 2: Clone Repository (For Beta Features)**
+
+For access to REHH and other beta features:
+```bash
+git clone https://github.com/Druzhba-Specifications/DIP_Framework.git
+cd DIP_Framework
+```
+
+**Includes:** Everything, including beta/experimental features
+
 ### Import the Framework
 
 ```python
 import System
 import Console
+import REHH  # Only available if you cloned the repository
 ```
 
 ---
+
+## Quick Reference
+
+### Most Common Operations
+
+```python
+import System
+import Console
+import datetime
+
+# Console
+Console.clear()                              # Clear screen
+
+# Logging
+System.log("Message")                        # Log with timestamp
+
+# Time Checking
+System.sysIf.ifTimeIsAfter(time)            # Check if after time
+System.sysIf.ifTimeIsBefore(time)           # Check if before time
+
+# File Operations
+System.computer.file.read.read_file(path)                    # Read file
+System.computer.file.write.write_file(path, content)         # Write file
+System.computer.file.ensure_dir(dir, True)                   # Create directory
+
+# Data Parsing - Local
+System.parse.file.json(filepath)             # Parse JSON file
+System.parse.file.csv(filepath)              # Parse CSV file
+
+# Data Parsing - URLs
+System.grabexternal.parse.json(url)          # Parse JSON from URL
+System.grabexternal.parse.csv(url)           # Parse CSV from URL
+
+# Media
+System.computer.playsound(file)              # Play audio
+System.computer.playvideo(file)              # Play video
+
+# Notifications
+System.computer.notify(title, msg, app)      # Desktop notification
+
+# System Control
+System.computer.sleep()                      # Sleep computer
+System.computer.reboot()                     # Reboot computer
+System.computer.shutdown()                   # Shutdown computer
+
+# Internet
+System.openbrowserlink(url)                  # Open URL in browser
+System.internet.convert_currency(amt, from, to)  # Convert currency
+System.internet.extract_domain(url)          # Parse URL
+
+# System Info
+System.info()                                # Display system info
+```
+
+---
+
+# Core Modules
 
 ## Console Module
 
 The Console module provides utilities for terminal/console management.
 
-### `Console.clear()`
+### Functions
+
+#### `Console.clear()`
 
 Clears all text from the terminal screen.
 
@@ -144,10 +248,6 @@ Console.clear()
 print("Clean screen!")
 ```
 
-**Platform Behavior:**
-- Windows: Uses `cls` command
-- Linux/Mac: Uses `clear` command
-
 **What DIP Does For You:**
 Instead of writing:
 ```python
@@ -162,7 +262,9 @@ You just write:
 Console.clear()
 ```
 
-**Note:** Includes automatic exception handling.
+**Platform Behavior:**
+- Windows: Uses `cls` command
+- Linux/Mac: Uses `clear` command
 
 ---
 
@@ -170,7 +272,353 @@ Console.clear()
 
 The System module contains most of the framework's functionality.
 
-### `System.info()`
+### Global Variables
+
+**`System.DIP_FRAMEWORK_VERSION`**
+- Framework version number (1.0)
+
+**`System.time_var`**
+- Current time as datetime.time object
+- Updated when module is imported
+
+**`System.date_var`**
+- Current date as datetime.date object
+- Updated when module is imported
+
+**`System.date_now`**
+- Formatted string: "MM/DD/YYYY HH:MM:SS AM/PM"
+- Updated when module is imported
+
+**Example:**
+```python
+print(System.DIP_FRAMEWORK_VERSION)  # 1.0
+print(System.time_var)                # 14:30:45.123456
+print(System.date_var)                # 2024-12-22
+print(System.date_now)                # 12/22/2024 02:30:45 PM
+```
+
+---
+
+## REHH Module
+
+**REHH** (Really Easy HTTP Hosting) is a compact module for hosting HTML files with minimal configuration.
+
+**Current Version:** 0.03 (Beta)  
+**Status:** Extreme Beta - No guarantee of working on all devices  
+**Availability:** Clone repository only - not in stable releases
+
+### Overview
+
+REHH simplifies web hosting by using XML configuration files. Instead of setting up complex web servers, you just create a simple XML config and start the server.
+
+**⚠️ Important:** REHH is only available if you clone the repository:
+```bash
+git clone https://github.com/Druzhba-Specifications/DIP_Framework.git
+```
+
+It is **not** included in stable release downloads because it's still in extreme beta.
+
+### Functions
+
+#### `REHH.start_rehh(location)`
+
+Starts an HTTP server based on an XML configuration file.
+
+**Syntax:**
+```python
+import REHH
+
+REHH.start_rehh("config.xml")
+```
+
+**Parameters:**
+- `location` (string) - Path to the XML configuration file
+
+**Returns:** None (server runs until interrupted)
+
+**Example:**
+```python
+import REHH
+
+# Start server with config file
+REHH.start_rehh("REHH/example.xml")
+# Server starts and runs until you press Ctrl+C
+```
+
+### Configuration File Format
+
+REHH uses XML configuration files:
+
+```xml
+<rehh>
+    <port>6767</port>
+    <loc>diffloc</loc>
+    <html>/home/Druzhba/index.html</html>
+</rehh>
+```
+
+**Configuration Tags:**
+
+| Tag | Description | Values |
+|-----|-------------|--------|
+| `<port>` | Port number for HTTP server | Any number (use 1024+ to avoid permissions) |
+| `<loc>` | Location type for HTML | `diffloc` (file path) or `webdoc` (direct HTML) |
+| `<html>` | HTML content or file path | File path when using `diffloc`, HTML when using `webdoc` |
+
+### Configuration Examples
+
+**Example 1: Host Local File**
+```xml
+<rehh>
+    <port>8080</port>
+    <loc>diffloc</loc>
+    <html>C:/websites/mysite/index.html</html>
+</rehh>
+```
+
+**Example 2: Direct HTML Content**
+```xml
+<rehh>
+    <port>3000</port>
+    <loc>webdoc</loc>
+    <html><h1>Hello World!</h1><p>Welcome!</p></html>
+</rehh>
+```
+
+### Complete Example
+
+**Step 1: Create HTML File**
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Site</title>
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <p>Hosted with REHH</p>
+</body>
+</html>
+```
+
+**Step 2: Create Config**
+```xml
+<!-- config.xml -->
+<rehh>
+    <port>8080</port>
+    <loc>diffloc</loc>
+    <html>index.html</html>
+</rehh>
+```
+
+**Step 3: Start Server**
+```python
+import REHH
+
+REHH.start_rehh("config.xml")
+```
+
+**Step 4: Visit Browser**
+Open `http://localhost:8080`
+
+### Stopping the Server
+
+Press `Ctrl+C` (or `Cmd+C` on Mac) to stop.
+
+### Important Notes
+
+⚠️ **Beta Status:**
+- Extreme beta - test thoroughly
+- No guarantee it works on all devices
+
+⚠️ **Security:**
+- For local development only
+- Not for production hosting
+- No authentication or encryption
+
+⚠️ **Limitations:**
+- Static HTML only
+- One file per server
+- No SSL/HTTPS
+- Ports below 1024 need admin/sudo
+
+---
+
+# System Features
+
+## Time Checking
+
+Time checking functions allow you to run code based on the current time.
+
+### Functions
+
+#### `System.sysIf.ifTimeIs(time)`
+
+Checks if current time matches a specific time.
+
+**Syntax:**
+```python
+System.sysIf.ifTimeIs(time)
+```
+
+**Parameters:**
+- `time` (datetime.time) - Time to check against
+
+**Returns:** Boolean
+
+**Example:**
+```python
+import datetime
+
+if System.sysIf.ifTimeIs(datetime.time(15, 30)):
+    print("It's exactly 3:30 PM!")
+```
+
+#### `System.sysIf.ifTimeIsBefore(time)`
+
+Checks if current time is before a specific time.
+
+**Syntax:**
+```python
+System.sysIf.ifTimeIsBefore(time)
+```
+
+**Parameters:**
+- `time` (datetime.time) - Time to check against
+
+**Returns:** Boolean
+
+**Example:**
+```python
+if System.sysIf.ifTimeIsBefore(datetime.time(12, 0)):
+    print("Good morning!")
+```
+
+#### `System.sysIf.ifTimeIsAfter(time)`
+
+Checks if current time is after a specific time.
+
+**Syntax:**
+```python
+System.sysIf.ifTimeIsAfter(time)
+```
+
+**Parameters:**
+- `time` (datetime.time) - Time to check against
+
+**Returns:** Boolean
+
+**Example:**
+```python
+if System.sysIf.ifTimeIsAfter(datetime.time(18, 0)):
+    print("Good evening!")
+```
+
+### Use Cases
+
+- Scheduling tasks
+- Time-based greetings
+- Conditional execution
+- Business hours checking
+
+---
+
+## Computer Control
+
+**⚠️ WARNING:** These functions actually control your computer. Use with caution!
+
+### Functions
+
+#### `System.computer.sleep()`
+
+Puts computer into sleep/suspend mode.
+
+**Syntax:**
+```python
+System.computer.sleep()
+```
+
+**Parameters:** None
+
+**Returns:** None
+
+**What DIP Does For You:**
+Instead of checking the platform and using different commands:
+```python
+if sys.platform.startswith('windows'):
+    subprocess.run(['shutdown', '/h'])
+elif sys.platform.startswith('linux'):
+    subprocess.run(['systemctl', 'suspend'])
+elif sys.platform.startswith('darwin'):
+    subprocess.run(['pmset', 'sleepnow'])
+```
+
+You just write:
+```python
+System.computer.sleep()
+```
+
+**Platform Behavior:**
+- Windows: Uses `shutdown /h` (hibernate)
+- Linux: Uses `systemctl suspend`
+- Mac: Uses `pmset sleepnow`
+
+**Requirements:**
+- Windows: May need administrator privileges
+- Linux/Mac: Requires sudo privileges
+
+#### `System.computer.reboot()`
+
+Restarts the computer.
+
+**Syntax:**
+```python
+System.computer.reboot()
+```
+
+**Parameters:** None
+
+**Returns:** None
+
+**Example:**
+```python
+System.log("Rebooting system...")
+System.computer.reboot()
+```
+
+**Platform Behavior:**
+- Windows: Uses `shutdown /r`
+- Linux/Mac: Uses `sudo shutdown -r now`
+
+**⚠️ WARNING:** All unsaved work will be lost!
+
+#### `System.computer.shutdown()`
+
+Shuts down the computer completely.
+
+**Syntax:**
+```python
+System.computer.shutdown()
+```
+
+**Parameters:** None
+
+**Returns:** None
+
+**Platform Behavior:**
+- Windows: Uses `shutdown /s`
+- Linux/Mac: Uses `sudo shutdown -h now`
+
+**⚠️ WARNING:** All unsaved work will be lost!
+
+---
+
+## System Information
+
+### Functions
+
+#### `System.info()`
 
 Displays comprehensive system information.
 
@@ -194,903 +642,16 @@ System.info()
 **Example:**
 ```python
 System.info()
-# Output: OS: win32, OS VERSION: Windows-10-10.0.19041-SP0 DIP FRAMEWORK VERSION: 1.0, ...
+# Output: OS: win32, OS VERSION: Windows-10-10.0.19041 DIP FRAMEWORK VERSION: 1.0, ...
 ```
-
-### `System.openbrowserlink(url)`
-
-Opens a URL in the system's default web browser.
-
-**Syntax:**
-```python
-System.openbrowserlink(url)
-```
-
-**Parameters:**
-- `url` (string) - The URL to open
-
-**Returns:** None
-
-**Example:**
-```python
-System.openbrowserlink("https://www.github.com")
-System.openbrowserlink("https://www.python.org")
-```
-
-**Platform Behavior:**
-- Windows: Uses `start` command
-- Linux: Uses `xdg-open` command
-- Mac: Uses `open` command
-
-**What DIP Does For You:**
-Instead of writing:
-```python
-if sys.platform.startswith("linux"):
-    os.system(f"xdg-open {url}")
-elif sys.platform.startswith("windows"):
-    os.system(f"start {url}")
-elif sys.platform.startswith("darwin"):
-    os.system(f"open {url}")
-```
-
-You just write:
-```python
-System.openbrowserlink(url)
-```
-
-### Global Variables
-
-**`System.time_var`**
-- Current time as a datetime.time object
-- Updated when module is imported
-
-**`System.date_var`**
-- Current date as a datetime.date object
-- Updated when module is imported
-
-**`System.date_now`**
-- Formatted string: "MM/DD/YYYY HH:MM:SS AM/PM"
-- Updated when module is imported
-
-**Example:**
-```python
-print(System.time_var)   # 14:30:45.123456
-print(System.date_var)   # 2024-12-22
-print(System.date_now)   # 12/22/2024 02:30:45 PM
-```
-
----
-
-## Time Checking
-
-Time checking functions allow you to run code based on the current time.
-
-### `System.sysIf.ifTimeIs(time)`
-
-Checks if the current time matches a specific time.
-
-**Syntax:**
-```python
-System.sysIf.ifTimeIs(time)
-```
-
-**Parameters:**
-- `time` (datetime.time) - The time to check against
-
-**Returns:** Boolean (True/False)
-
-**Example:**
-```python
-import datetime
-
-if System.sysIf.ifTimeIs(datetime.time(15, 30)):
-    print("It's exactly 3:30 PM!")
-```
-
-### `System.sysIf.ifTimeIsBefore(time)`
-
-Checks if the current time is before a specific time.
-
-**Syntax:**
-```python
-System.sysIf.ifTimeIsBefore(time)
-```
-
-**Parameters:**
-- `time` (datetime.time) - The time to check against
-
-**Returns:** Boolean (True/False)
-
-**Example:**
-```python
-if System.sysIf.ifTimeIsBefore(datetime.time(12, 0)):
-    print("Good morning!")
-```
-
-### `System.sysIf.ifTimeIsAfter(time)`
-
-Checks if the current time is after a specific time.
-
-**Syntax:**
-```python
-System.sysIf.ifTimeIsAfter(time)
-```
-
-**Parameters:**
-- `time` (datetime.time) - The time to check against
-
-**Returns:** Boolean (True/False)
-
-**Example:**
-```python
-if System.sysIf.ifTimeIsAfter(datetime.time(18, 0)):
-    print("Good evening!")
-    
-# Schedule a task
-if System.sysIf.ifTimeIsAfter(datetime.time(14, 30)):
-    # Run afternoon tasks
-    send_afternoon_report()
-```
-
-**Use Cases:**
-- Scheduling tasks
-- Time-based greetings
-- Conditional execution based on time of day
-- Business hours checking
-
----
-
-## Computer Control
-
-**⚠️ WARNING:** These functions actually control your computer. Use with caution!
-
-### `System.computer.sleep()`
-
-Puts the computer into sleep/suspend mode.
-
-**Syntax:**
-```python
-System.computer.sleep()
-```
-
-**Parameters:** None
-
-**Returns:** None
-
-**Example:**
-```python
-System.computer.sleep()
-```
-
-**Platform Behavior:**
-- Windows: Uses `shutdown /h` (hibernate)
-- Linux: Uses `systemctl suspend`
-- Mac: Uses `pmset sleepnow`
-
-**What DIP Does For You:**
-Instead of checking the platform and using different commands:
-```python
-if sys.platform.startswith('windows'):
-    subprocess.run(['shutdown', '/h'])
-elif sys.platform.startswith('linux'):
-    subprocess.run(['systemctl', 'suspend'])
-elif sys.platform.startswith('darwin'):
-    subprocess.run(['pmset', 'sleepnow'])
-```
-
-You just write:
-```python
-System.computer.sleep()
-```
-
-**Requirements:**
-- Windows: May need administrator privileges
-- Linux/Mac: Requires sudo privileges
-
-### `System.computer.reboot()`
-
-Restarts the computer.
-
-**Syntax:**
-```python
-System.computer.reboot()
-```
-
-**Parameters:** None
-
-**Returns:** None
-
-**Example:**
-```python
-# Save all work first!
-System.log("Rebooting system...")
-System.computer.reboot()
-```
-
-**Platform Behavior:**
-- Windows: Uses `shutdown /r`
-- Linux/Mac: Uses `sudo shutdown -r now`
-
-**What DIP Does For You:**
-No more writing platform-specific shutdown commands! DIP handles it automatically.
-
-**⚠️ WARNING:** All unsaved work will be lost!
-
-### `System.computer.shutdown()`
-
-Shuts down the computer completely.
-
-**Syntax:**
-```python
-System.computer.shutdown()
-```
-
-**Parameters:** None
-
-**Returns:** None
-
-**Example:**
-```python
-System.log("Shutting down...")
-System.computer.shutdown()
-```
-
-**Platform Behavior:**
-- Windows: Uses `shutdown /s`
-- Linux/Mac: Uses `sudo shutdown -h now`
-
-**What DIP Does For You:**
-One simple function instead of messy platform checks and different commands for each OS.
-
-**⚠️ WARNING:** All unsaved work will be lost!
-
----
-
-## Media Playback
-
-### `System.computer.playsound(location)`
-
-Plays an audio file.
-
-**Syntax:**
-```python
-System.computer.playsound(location)
-```
-
-**Parameters:**
-- `location` (string) - Path to the audio file
-
-**Returns:** None
-
-**Supported Formats:**
-- MP3
-- WAV
-- OGG
-- Other formats supported by playsound3
-
-**Example:**
-```python
-# Relative path
-System.computer.playsound("sounds/notification.mp3")
-
-# Absolute path
-System.computer.playsound("C:/Users/You/Music/song.wav")
-
-# Notification sound
-System.computer.playsound("beep.wav")
-```
-
-**Requirements:**
-- playsound3 library
-- Working audio output device
-
-### `System.computer.playvideo(location)`
-
-Plays a video file using VLC media player.
-
-**Syntax:**
-```python
-System.computer.playvideo(location)
-```
-
-**Parameters:**
-- `location` (string) - Path to the video file
-
-**Returns:** None
-
-**Supported Formats:**
-- MP4
-- AVI
-- MKV
-- MOV
-- Any format supported by VLC
-
-**Example:**
-```python
-System.computer.playvideo("videos/tutorial.mp4")
-System.computer.playvideo("C:/Videos/movie.avi")
-```
-
-**Important Notes:**
-- Requires VLC media player installed on your system
-- The script will pause and wait until the video finishes playing
-- Video plays in a VLC window
-
-**Requirements:**
-- VLC media player installed
-- python-vlc library
-
-**Download VLC:** https://www.videolan.org/vlc/
-
----
-
-## Desktop Notifications
-
-### `System.computer.notify(title, message, appname)`
-
-Displays a desktop notification to the user.
-
-**Syntax:**
-```python
-System.computer.notify(title, message, appname)
-```
-
-**Parameters:**
-- `title` (string) - The notification title
-- `message` (string) - The notification message body
-- `appname` (string) - Your application name
-
-**Returns:** None
-
-**Example:**
-```python
-System.computer.notify(
-    "Download Complete",
-    "Your file has been downloaded successfully!",
-    "MyApp"
-)
-
-# Task completion
-System.computer.notify(
-    "Processing Done",
-    "1000 records processed",
-    "Data Processor"
-)
-
-# Alert
-System.computer.notify(
-    "Warning",
-    "Disk space is running low",
-    "System Monitor"
-)
-```
-
-**Platform Behavior:**
-- Windows: Uses Windows notification system
-- Linux: Uses notification daemon (notify-send)
-- Mac: Uses macOS notification center
-
-**Note:** Duration is currently fixed at 10 seconds.
-
-**Requirements:**
-- Desktop environment (not available on headless servers)
-- plyer library
-
----
-
-## File Operations
-
-File operations are organized under `System.computer.file`.
-
-### Reading Files
-
-#### `System.computer.file.read.read_file(path)`
-
-Reads the contents of a text file.
-
-**Syntax:**
-```python
-System.computer.file.read.read_file(path)
-```
-
-**Parameters:**
-- `path` (string) - Path to the file
-
-**Returns:** String (file contents) or None if file doesn't exist
-
-**Example:**
-```python
-content = System.computer.file.read.read_file("document.txt")
-if content:
-    print(content)
-else:
-    print("File not found")
-```
-
-**Encoding:** UTF-8 by default
-
-### Writing Files
-
-#### `System.computer.file.write.write_file(filepath, content)`
-
-Writes content to a text file (creates or overwrites).
-
-**Syntax:**
-```python
-System.computer.file.write.write_file(filepath, content)
-```
-
-**Parameters:**
-- `filepath` (string) - Path where to save the file
-- `content` (string) - Content to write
-
-**Returns:** None
-
-**Example:**
-```python
-System.computer.file.write.write_file("output.txt", "Hello, World!")
-
-# Multi-line content
-content = """Line 1
-Line 2
-Line 3"""
-System.computer.file.write.write_file("data.txt", content)
-```
-
-**Note:** Creates the file if it doesn't exist, overwrites if it does.
-
-#### `System.computer.file.write.write_json(path, json_data)`
-
-Writes data to a JSON file.
-
-**Syntax:**
-```python
-System.computer.file.write.write_json(path, json_data)
-```
-
-**Parameters:**
-- `path` (string) - Path where to save the JSON file
-- `json_data` (dict/list) - Python data structure to save
-
-**Returns:** None
-
-**Example:**
-```python
-data = {
-    "name": "John",
-    "age": 30,
-    "city": "New York"
-}
-System.computer.file.write.write_json("config.json", data)
-```
-
-#### `System.computer.file.write.write_csv(path, csv_data)`
-
-Writes data to a CSV file.
-
-**Syntax:**
-```python
-System.computer.file.write.write_csv(path, csv_data)
-```
-
-**Parameters:**
-- `path` (string) - Path where to save the CSV file
-- `csv_data` (list of lists) - Data to write
-
-**Returns:** None
-
-**Data Format:**
-```python
-data = [
-    ['Name', 'Department', 'Birthday Month'],
-    ['John Smith', 'Accounting', 'November'],
-    ['Erica Meyers', 'IT', 'March']
-]
-```
-
-**Example:**
-```python
-data = [
-    ['Name', 'Age', 'City'],
-    ['Alice', '25', 'Boston'],
-    ['Bob', '30', 'Chicago']
-]
-System.computer.file.write.write_csv("people.csv", data)
-```
-
-**Note:** First row is typically headers.
-
-#### `System.computer.file.write.write_yaml(path, yaml_data)`
-
-Writes data to a YAML file.
-
-**Syntax:**
-```python
-System.computer.file.write.write_yaml(path, yaml_data)
-```
-
-**Parameters:**
-- `path` (string) - Path where to save the YAML file
-- `yaml_data` (dict/list) - Python data structure to save
-
-**Returns:** None
-
-**Example:**
-```python
-config = {
-    "database": {
-        "host": "localhost",
-        "port": 5432
-    },
-    "debug": True
-}
-System.computer.file.write.write_yaml("config.yaml", config)
-```
-
-### Directory Management
-
-#### `System.computer.file.ensure_dir(directory, answer)`
-
-Checks if a directory exists, optionally creates it.
-
-**Syntax:**
-```python
-System.computer.file.ensure_dir(directory, answer)
-```
-
-**Parameters:**
-- `directory` (string) - Path to the directory
-- `answer` (boolean) - If True, creates the directory; if False, just checks
-
-**Returns:** Boolean (True if exists/created, False if doesn't exist when answer=False)
-
-**Example:**
-```python
-# Just check if it exists
-if System.computer.file.ensure_dir("data", False):
-    print("Directory exists")
-else:
-    print("Directory doesn't exist")
-
-# Create if it doesn't exist
-System.computer.file.ensure_dir("output", True)
-
-# Nested directories
-System.computer.file.ensure_dir("data/processed/2024", True)
-```
-
-**Use Cases:**
-- Ensuring output directories exist before saving files
-- Checking for required folders
-- Creating project structure
-
----
-
-## Currency Conversion
-
-### `System.internet.convert_currency(amount, original_currency, converted_currency)`
-
-Converts money from one currency to another using live exchange rates.
-
-**Syntax:**
-```python
-System.internet.convert_currency(amount, original_currency, converted_currency)
-```
-
-**Parameters:**
-- `amount` (number) - Amount to convert
-- `original_currency` (string) - Source currency code (ISO 4217)
-- `converted_currency` (string) - Target currency code (ISO 4217)
-
-**Returns:** Float (converted amount)
-
-**Example:**
-```python
-# Convert 100 USD to EUR
-result = System.internet.convert_currency(100, "USD", "EUR")
-print(f"100 USD = {result} EUR")
-
-# Convert 50 GBP to JPY
-result = System.internet.convert_currency(50, "GBP", "JPY")
-print(f"50 GBP = {result} JPY")
-
-# Multiple conversions
-currencies = ["EUR", "GBP", "JPY", "CAD"]
-for currency in currencies:
-    result = System.internet.convert_currency(100, "USD", currency)
-    print(f"100 USD = {result} {currency}")
-```
-
-**Common Currency Codes:**
-- USD - United States Dollar
-- EUR - Euro
-- GBP - British Pound
-- JPY - Japanese Yen
-- CAD - Canadian Dollar
-- AUD - Australian Dollar
-- CHF - Swiss Franc
-- CNY - Chinese Yuan
-
-**Requirements:**
-- Internet connection
-- freecurrencyapi library
-- API key (included in framework)
-
-**Notes:**
-- Exchange rates are live/current
-- Rates update automatically
-- Free API has rate limits
-
----
-
-## Internet Utilities
-
-### `System.internet.extract_domain(url)`
-
-Parses a URL and extracts its components.
-
-**Syntax:**
-```python
-System.internet.extract_domain(url)
-```
-
-**Parameters:**
-- `url` (string) - The URL to parse
-
-**Returns:** ParseResult object with URL components
-
-**Available Properties:**
-- `scheme` - URL scheme (http, https, ftp, etc.)
-- `netloc` - Network location (domain)
-- `path` - Path to resource
-- `params` - Parameters
-- `query` - Query string
-- `fragment` - Fragment identifier
-
-**Example:**
-```python
-parsed = System.internet.extract_domain("https://www.github.com/user/repo?tab=readme")
-
-print(parsed.scheme)    # https
-print(parsed.netloc)    # www.github.com
-print(parsed.path)      # /user/repo
-print(parsed.query)     # tab=readme
-
-# Extract just the domain
-url = "https://api.example.com/v1/data"
-domain = System.internet.extract_domain(url).netloc
-print(domain)  # api.example.com
-```
-
-**Use Cases:**
-- Extracting domain names from URLs
-- Validating URL structure
-- Parsing query parameters
-- Security checks (verifying allowed domains)
-
----
-
-## Data Parsing
-
-DIP Framework supports parsing multiple data formats from both local files and external URLs.
-
-### Local File Parsing
-
-All local file parsing functions are under `System.parse.file`.
-
-#### `System.parse.file.json(filepath)`
-
-Parses a JSON file.
-
-**Syntax:**
-```python
-System.parse.file.json(filepath)
-```
-
-**Parameters:**
-- `filepath` (string) - Path to the JSON file
-
-**Returns:** Python dict or list (parsed JSON data)
-
-**Example:**
-```python
-# Simple JSON object
-data = System.parse.file.json("config.json")
-print(data["database"]["host"])
-
-# JSON array
-users = System.parse.file.json("users.json")
-for user in users:
-    print(user["name"])
-```
-
-**Error Handling:**
-- FileNotFoundError - File doesn't exist
-- JSONDecodeError - Invalid JSON format
-
-#### `System.parse.file.csv(filepath)`
-
-Parses a CSV file.
-
-**Syntax:**
-```python
-System.parse.file.csv(filepath)
-```
-
-**Parameters:**
-- `filepath` (string) - Path to the CSV file
-
-**Returns:** List of dictionaries (one per row)
-
-**Example:**
-```python
-data = System.parse.file.csv("contacts.csv")
-
-# Each row is a dictionary
-for row in data:
-    print(f"{row['Name']}: {row['Email']}")
-
-# Access specific column
-emails = [row['Email'] for row in data]
-```
-
-**Note:** First row is treated as headers.
-
-#### `System.parse.file.yaml(filepath)`
-
-Parses a YAML file.
-
-**Syntax:**
-```python
-System.parse.file.yaml(filepath)
-```
-
-**Parameters:**
-- `filepath` (string) - Path to the YAML file
-
-**Returns:** Python dict or list (parsed YAML data)
-
-**Example:**
-```python
-config = System.parse.file.yaml("config.yaml")
-print(config["database"]["host"])
-print(config["debug"])
-```
-
-**Error Handling:**
-- FileNotFoundError - File doesn't exist
-- YAMLError - Invalid YAML format
-
-#### `System.parse.file.xml(filepath)`
-
-Parses an XML file.
-
-**Syntax:**
-```python
-System.parse.file.xml(filepath)
-```
-
-**Parameters:**
-- `filepath` (string) - Path to the XML file
-
-**Returns:** ElementTree object
-
-**Example:**
-```python
-tree = System.parse.file.xml("data.xml")
-root = tree
-
-# Find elements
-for child in root:
-    print(child.tag, child.text)
-
-# Find specific elements
-items = root.findall('.//item')
-```
-
-**Error Handling:**
-- FileNotFoundError - File doesn't exist
-- ParseError - Invalid XML format
-
-### External URL Parsing
-
-All external URL parsing functions are under `System.grabexternal.parse`.
-
-#### `System.grabexternal.parse.json(url)`
-
-Fetches and parses JSON from a URL.
-
-**Syntax:**
-```python
-System.grabexternal.parse.json(url)
-```
-
-**Parameters:**
-- `url` (string) - URL to fetch JSON from
-
-**Returns:** Python dict or list (parsed JSON data)
-
-**Example:**
-```python
-# API endpoint
-weather = System.grabexternal.parse.json("https://api.weather.com/current")
-print(weather["temperature"])
-
-# Public data
-data = System.grabexternal.parse.json("https://example.com/data.json")
-```
-
-**Requirements:** Internet connection
-
-#### `System.grabexternal.parse.csv(url)`
-
-Fetches and parses CSV from a URL.
-
-**Syntax:**
-```python
-System.grabexternal.parse.csv(url)
-```
-
-**Parameters:**
-- `url` (string) - URL to fetch CSV from
-
-**Returns:** List of dictionaries (one per row)
-
-**Example:**
-```python
-data = System.grabexternal.parse.csv("https://example.com/data.csv")
-for row in data:
-    print(row)
-```
-
-#### `System.grabexternal.parse.yaml(url)`
-
-Fetches and parses YAML from a URL.
-
-**Syntax:**
-```python
-System.grabexternal.parse.yaml(url)
-```
-
-**Parameters:**
-- `url` (string) - URL to fetch YAML from
-
-**Returns:** Python dict or list (parsed YAML data)
-
-**Example:**
-```python
-config = System.grabexternal.parse.yaml("https://example.com/config.yaml")
-```
-
-#### `System.grabexternal.parse.xml(url)`
-
-Fetches and parses XML from a URL.
-
-**Syntax:**
-```python
-System.grabexternal.parse.xml(url)
-```
-
-**Parameters:**
-- `url` (string) - URL to fetch XML from
-
-**Returns:** ElementTree object
-
-**Example:**
-```python
-feed = System.grabexternal.parse.xml("https://example.com/rss.xml")
-```
-
-**Common Errors:**
-- HTTP errors (404, 500, etc.)
-- Network errors (no internet, timeout)
-- Parse errors (invalid format)
 
 ---
 
 ## Logging System
 
-### `System.log(message)`
+### Functions
+
+#### `System.log(message)`
 
 Writes a timestamped message to the log file.
 
@@ -1100,7 +661,7 @@ System.log(message)
 ```
 
 **Parameters:**
-- `message` (string) - The message to log
+- `message` (string) - Message to log
 
 **Returns:** None
 
@@ -1111,7 +672,7 @@ System.log(message)
 System.log("Application started")
 System.log("User logged in")
 System.log("Processing 100 records")
-System.log("Operation completed successfully")
+System.log("Operation completed")
 
 # Log errors
 try:
@@ -1129,25 +690,575 @@ Log created 2024-12-22 14:30:00.123456
 ```
 
 **Features:**
-- Automatic timestamp on each entry
-- Creates log directory if it doesn't exist
-- Creates log file if it doesn't exist
-- Appends to existing log file
-
-**Use Cases:**
-- Debugging
-- Tracking application flow
-- Error logging
-- Audit trails
-- Performance monitoring
+- Automatic timestamps
+- Auto-creates log directory
+- Auto-creates log file
+- Appends to existing logs
 
 ---
+
+# File & Data
+
+## File Operations
+
+File operations are organized under `System.computer.file`.
+
+### Reading Files
+
+#### `System.computer.file.read.read_file(path)`
+
+Reads contents of a text file.
+
+**Syntax:**
+```python
+System.computer.file.read.read_file(path)
+```
+
+**Parameters:**
+- `path` (string) - Path to file
+
+**Returns:** String (file contents) or None
+
+**Example:**
+```python
+content = System.computer.file.read.read_file("document.txt")
+if content:
+    print(content)
+```
+
+### Writing Files
+
+#### `System.computer.file.write.write_file(filepath, content)`
+
+Writes content to a text file.
+
+**Syntax:**
+```python
+System.computer.file.write.write_file(filepath, content)
+```
+
+**Parameters:**
+- `filepath` (string) - Where to save
+- `content` (string) - Content to write
+
+**Returns:** None
+
+**Example:**
+```python
+System.computer.file.write.write_file("output.txt", "Hello, World!")
+```
+
+#### `System.computer.file.write.write_json(path, json_data)`
+
+Writes data to a JSON file.
+
+**Syntax:**
+```python
+System.computer.file.write.write_json(path, json_data)
+```
+
+**Parameters:**
+- `path` (string) - Where to save
+- `json_data` (dict/list) - Data to write
+
+**Example:**
+```python
+data = {"name": "John", "age": 30}
+System.computer.file.write.write_json("config.json", data)
+```
+
+#### `System.computer.file.write.write_csv(path, csv_data)`
+
+Writes data to a CSV file.
+
+**Syntax:**
+```python
+System.computer.file.write.write_csv(path, csv_data)
+```
+
+**Parameters:**
+- `path` (string) - Where to save
+- `csv_data` (list of lists) - Data to write
+
+**Data Format:**
+```python
+data = [
+    ['Name', 'Age', 'City'],      # Headers
+    ['Alice', '25', 'Boston'],
+    ['Bob', '30', 'Chicago']
+]
+```
+
+**Example:**
+```python
+System.computer.file.write.write_csv("people.csv", data)
+```
+
+#### `System.computer.file.write.write_yaml(path, yaml_data)`
+
+Writes data to a YAML file.
+
+**Syntax:**
+```python
+System.computer.file.write.write_yaml(path, yaml_data)
+```
+
+**Parameters:**
+- `path` (string) - Where to save
+- `yaml_data` (dict/list) - Data to write
+
+**Example:**
+```python
+config = {
+    "database": {"host": "localhost", "port": 5432},
+    "debug": True
+}
+System.computer.file.write.write_yaml("config.yaml", config)
+```
+
+### Directory Management
+
+#### `System.computer.file.ensure_dir(directory, answer)`
+
+Checks if directory exists, optionally creates it.
+
+**Syntax:**
+```python
+System.computer.file.ensure_dir(directory, answer)
+```
+
+**Parameters:**
+- `directory` (string) - Path to directory
+- `answer` (boolean) - True to create, False to just check
+
+**Returns:** Boolean
+
+**Example:**
+```python
+# Just check
+if System.computer.file.ensure_dir("data", False):
+    print("Exists!")
+
+# Create if needed
+System.computer.file.ensure_dir("output", True)
+
+# Nested directories
+System.computer.file.ensure_dir("data/processed/2024", True)
+```
+
+---
+
+## Data Parsing - Local Files
+
+All local file parsing under `System.parse.file`.
+
+### Functions
+
+#### `System.parse.file.json(filepath)`
+
+Parses a JSON file.
+
+**Syntax:**
+```python
+System.parse.file.json(filepath)
+```
+
+**Parameters:**
+- `filepath` (string) - Path to JSON file
+
+**Returns:** Dict or list
+
+**Example:**
+```python
+data = System.parse.file.json("config.json")
+print(data["database"]["host"])
+```
+
+#### `System.parse.file.csv(filepath)`
+
+Parses a CSV file.
+
+**Syntax:**
+```python
+System.parse.file.csv(filepath)
+```
+
+**Parameters:**
+- `filepath` (string) - Path to CSV file
+
+**Returns:** List of dictionaries
+
+**Example:**
+```python
+data = System.parse.file.csv("contacts.csv")
+for row in data:
+    print(f"{row['Name']}: {row['Email']}")
+```
+
+#### `System.parse.file.yaml(filepath)`
+
+Parses a YAML file.
+
+**Syntax:**
+```python
+System.parse.file.yaml(filepath)
+```
+
+**Parameters:**
+- `filepath` (string) - Path to YAML file
+
+**Returns:** Dict or list
+
+**Example:**
+```python
+config = System.parse.file.yaml("config.yaml")
+print(config["database"]["host"])
+```
+
+#### `System.parse.file.xml(filepath)`
+
+Parses an XML file.
+
+**Syntax:**
+```python
+System.parse.file.xml(filepath)
+```
+
+**Parameters:**
+- `filepath` (string) - Path to XML file
+
+**Returns:** ElementTree object
+
+**Example:**
+```python
+tree = System.parse.file.xml("data.xml")
+for child in tree:
+    print(child.tag, child.text)
+```
+
+---
+
+## Data Parsing - External URLs
+
+All external URL parsing under `System.grabexternal.parse`.
+
+### Functions
+
+#### `System.grabexternal.parse.json(url)`
+
+Fetches and parses JSON from a URL.
+
+**Syntax:**
+```python
+System.grabexternal.parse.json(url)
+```
+
+**Parameters:**
+- `url` (string) - URL to fetch from
+
+**Returns:** Dict or list
+
+**Example:**
+```python
+weather = System.grabexternal.parse.json("https://api.weather.com/current")
+print(weather["temperature"])
+```
+
+#### `System.grabexternal.parse.csv(url)`
+
+Fetches and parses CSV from a URL.
+
+**Syntax:**
+```python
+System.grabexternal.parse.csv(url)
+```
+
+**Parameters:**
+- `url` (string) - URL to fetch from
+
+**Returns:** List of dictionaries
+
+**Example:**
+```python
+data = System.grabexternal.parse.csv("https://example.com/data.csv")
+```
+
+#### `System.grabexternal.parse.yaml(url)`
+
+Fetches and parses YAML from a URL.
+
+**Syntax:**
+```python
+System.grabexternal.parse.yaml(url)
+```
+
+**Parameters:**
+- `url` (string) - URL to fetch from
+
+**Returns:** Dict or list
+
+#### `System.grabexternal.parse.xml(url)`
+
+Fetches and parses XML from a URL.
+
+**Syntax:**
+```python
+System.grabexternal.parse.xml(url)
+```
+
+**Parameters:**
+- `url` (string) - URL to fetch from
+
+**Returns:** ElementTree object
+
+**Note:** All external parsing requires internet connection.
+
+---
+
+# Media & Notifications
+
+## Media Playback
+
+### Functions
+
+#### `System.computer.playsound(location)`
+
+Plays an audio file.
+
+**Syntax:**
+```python
+System.computer.playsound(location)
+```
+
+**Parameters:**
+- `location` (string) - Path to audio file
+
+**Returns:** None
+
+**Supported Formats:** MP3, WAV, OGG
+
+**Example:**
+```python
+System.computer.playsound("sounds/notification.mp3")
+System.computer.playsound("C:/Users/You/Music/song.wav")
+```
+
+**Requirements:**
+- playsound3 library
+- Working audio output
+
+#### `System.computer.playvideo(location)`
+
+Plays a video file using VLC.
+
+**Syntax:**
+```python
+System.computer.playvideo(location)
+```
+
+**Parameters:**
+- `location` (string) - Path to video file
+
+**Returns:** None
+
+**Supported Formats:** MP4, AVI, MKV, MOV
+
+**Example:**
+```python
+System.computer.playvideo("videos/tutorial.mp4")
+```
+
+**Important:**
+- Requires VLC media player installed
+- Script pauses until video finishes
+- Download VLC: https://www.videolan.org/vlc/
+
+---
+
+## Desktop Notifications
+
+### Functions
+
+#### `System.computer.notify(title, message, appname)`
+
+Displays a desktop notification.
+
+**Syntax:**
+```python
+System.computer.notify(title, message, appname)
+```
+
+**Parameters:**
+- `title` (string) - Notification title
+- `message` (string) - Notification body
+- `appname` (string) - Your app name
+
+**Returns:** None
+
+**Example:**
+```python
+System.computer.notify(
+    "Download Complete",
+    "Your file has been downloaded!",
+    "MyApp"
+)
+```
+
+**Platform Support:**
+- Windows: Native notifications
+- Linux: notify-send (needs desktop environment)
+- Mac: Notification center
+
+**Note:** Duration fixed at 10 seconds.
+
+---
+
+# Internet & Web
+
+## URL Operations
+
+### Functions
+
+#### `System.openbrowserlink(url)`
+
+Opens a URL in default browser.
+
+**Syntax:**
+```python
+System.openbrowserlink(url)
+```
+
+**Parameters:**
+- `url` (string) - URL to open
+
+**Returns:** None
+
+**Example:**
+```python
+System.openbrowserlink("https://www.github.com")
+System.openbrowserlink("https://www.python.org")
+```
+
+**What DIP Does For You:**
+Instead of writing:
+```python
+if sys.platform.startswith("linux"):
+    os.system(f"xdg-open {url}")
+elif sys.platform.startswith("windows"):
+    os.system(f"start {url}")
+elif sys.platform.startswith("darwin"):
+    os.system(f"open {url}")
+```
+
+You just write:
+```python
+System.openbrowserlink(url)
+```
+
+**Platform Behavior:**
+- Windows: Uses `start` command
+- Linux: Uses `xdg-open` command
+- Mac: Uses `open` command
+
+---
+
+## Currency Conversion
+
+### Functions
+
+#### `System.internet.convert_currency(amount, original_currency, converted_currency)`
+
+Converts money between currencies using live rates.
+
+**Syntax:**
+```python
+System.internet.convert_currency(amount, original_currency, converted_currency)
+```
+
+**Parameters:**
+- `amount` (number) - Amount to convert
+- `original_currency` (string) - Source currency (ISO 4217 code)
+- `converted_currency` (string) - Target currency (ISO 4217 code)
+
+**Returns:** Float (converted amount)
+
+**Example:**
+```python
+# Convert 100 USD to EUR
+result = System.internet.convert_currency(100, "USD", "EUR")
+print(f"100 USD = {result} EUR")
+
+# Convert 50 GBP to JPY
+result = System.internet.convert_currency(50, "GBP", "JPY")
+```
+
+**Common Currency Codes:**
+- USD - US Dollar
+- EUR - Euro
+- GBP - British Pound
+- JPY - Japanese Yen
+- CAD - Canadian Dollar
+- AUD - Australian Dollar
+
+**Requirements:**
+- Internet connection
+- freecurrencyapi library
+
+---
+
+## Internet Utilities
+
+### Functions
+
+#### `System.internet.extract_domain(url)`
+
+Parses a URL and extracts components.
+
+**Syntax:**
+```python
+System.internet.extract_domain(url)
+```
+
+**Parameters:**
+- `url` (string) - URL to parse
+
+**Returns:** ParseResult object
+
+**Available Properties:**
+- `scheme` - URL scheme (http, https, etc.)
+- `netloc` - Network location/domain
+- `path` - Path to resource
+- `query` - Query string
+- `fragment` - Fragment identifier
+
+**Example:**
+```python
+parsed = System.internet.extract_domain("https://www.github.com/user/repo?tab=readme")
+
+print(parsed.scheme)    # https
+print(parsed.netloc)    # www.github.com
+print(parsed.path)      # /user/repo
+print(parsed.query)     # tab=readme
+
+# Extract just domain
+domain = System.internet.extract_domain(url).netloc
+```
+
+**Use Cases:**
+- Extract domain names
+- Validate URL structure
+- Parse query parameters
+- Security checks
+
+---
+
+# Reference
 
 ## Best Practices
 
 ### Error Handling
 
-Always wrap potentially failing operations in try-except blocks:
+Always wrap potentially failing operations:
 
 ```python
 try:
@@ -1164,7 +1275,6 @@ Use absolute paths when possible:
 ```python
 import os
 
-# Get absolute path
 config_path = os.path.abspath("config.json")
 data = System.parse.file.json(config_path)
 ```
@@ -1183,25 +1293,9 @@ except Exception as e:
     System.log(f"Processing failed: {e}")
 ```
 
-### Time Checks
-
-Store time objects for reuse:
-
-```python
-morning_end = datetime.time(12, 0)
-evening_start = datetime.time(18, 0)
-
-if System.sysIf.ifTimeIsBefore(morning_end):
-    # Morning tasks
-    pass
-elif System.sysIf.ifTimeIsAfter(evening_start):
-    # Evening tasks
-    pass
-```
-
 ### System Control
 
-Always warn users before system control operations:
+Always warn users:
 
 ```python
 print("WARNING: This will reboot your computer!")
@@ -1214,70 +1308,66 @@ if response.lower() == "yes":
 
 ## Troubleshooting
 
-### Module Not Found Error
+### Module Not Found
 
-**Problem:** `ModuleNotFoundError: No module named 'psutil'` (or other libraries)
+**Problem:** `ModuleNotFoundError`
 
 **Solution:**
 ```bash
 pip install psutil requests pyyaml playsound3 python-vlc plyer freecurrencyapi
 ```
 
-### Video Playback Fails
+### Video Won't Play
 
-**Problem:** Videos won't play
+**Problem:** Videos don't play
 
 **Solution:**
-- Install VLC media player from https://www.videolan.org/vlc/
-- Ensure python-vlc is installed: `pip install python-vlc`
+- Install VLC: https://www.videolan.org/vlc/
+- Install python-vlc: `pip install python-vlc`
 
 ### Notifications Not Showing
 
 **Problem:** Desktop notifications don't appear
 
 **Solutions:**
-- Ensure you have a desktop environment (not a headless server)
-- On Linux, check if notification daemon is running
-- Check system notification settings
-- Verify plyer is installed: `pip install plyer`
+- Need desktop environment (not headless server)
+- Linux: Check notification daemon running
+- Verify system notification settings
 
-### Permission Denied on System Control
+### Permission Denied
 
 **Problem:** Can't sleep/reboot/shutdown
 
 **Solutions:**
-- **Windows:** Run script as Administrator (right-click → Run as Administrator)
-- **Linux/Mac:** Use sudo: `sudo python your_script.py`
+- Windows: Run as Administrator
+- Linux/Mac: Use sudo: `sudo python script.py`
 
 ### Currency Conversion Fails
 
-**Problem:** Currency conversion returns errors
+**Problem:** Currency errors
 
 **Solutions:**
 - Check internet connection
-- Verify currency codes are valid (ISO 4217 codes like "USD", "EUR")
-- API has rate limits - wait a moment and retry
-- Ensure freecurrencyapi is installed
+- Verify currency codes (ISO 4217)
+- API rate limits - wait and retry
 
 ### File Not Found
 
-**Problem:** Can't find files when parsing
+**Problem:** Can't find files
 
 **Solutions:**
-- Use absolute paths: `os.path.abspath("file.json")`
-- Check if file actually exists: `os.path.exists("file.json")`
-- Verify spelling and file extension
-- Check current working directory: `print(os.getcwd())`
+- Use absolute paths
+- Check file exists: `os.path.exists("file.json")`
+- Verify spelling and extension
 
-### CSV Parsing Issues
+### REHH Issues
 
-**Problem:** CSV data looks wrong
+**Problem:** Server won't start
 
 **Solutions:**
-- Check file encoding (should be UTF-8)
-- Verify CSV has headers in first row
-- Check delimiter (should be comma)
-- Look for special characters or line breaks in data
+- Try different port
+- Use ports above 1024
+- Check port not already in use
 
 ---
 
@@ -1286,62 +1376,153 @@ pip install psutil requests pyyaml playsound3 python-vlc plyer freecurrencyapi
 ### Windows
 
 **Supported Features:**
-- ✅ Console clearing
-- ✅ Time checking
-- ✅ Media playback
+- ✅ All console operations
+- ✅ All time checking
+- ✅ All media playback
 - ✅ Desktop notifications
-- ✅ File operations
-- ✅ System control (may need admin for reboot/shutdown)
-- ✅ Data parsing
+- ✅ All file operations
+- ✅ System control (admin for reboot/shutdown)
+- ✅ All data parsing
 - ✅ Currency conversion
-- ✅ URL parsing
+- ✅ All URL operations
+- ✅ REHH web hosting
 
 **Requirements:**
-- Python 3.x for Windows
-- VLC for Windows (for video playback)
+- Python 3.x
+- VLC (for video)
 
 ### Linux
 
 **Supported Features:**
-- ✅ Console clearing
-- ✅ Time checking
-- ✅ Media playback
+- ✅ All console operations
+- ✅ All time checking
+- ✅ All media playback
 - ✅ Desktop notifications (with desktop environment)
-- ✅ File operations
+- ✅ All file operations
 - ✅ System control (requires sudo)
-- ✅ Data parsing
+- ✅ All data parsing
 - ✅ Currency conversion
-- ✅ URL parsing
+- ✅ All URL operations
+- ✅ REHH web hosting
 
 **Requirements:**
 - Python 3.x
 - VLC media player
 - Desktop environment (for notifications)
-- sudo access (for system control)
-
-**Common Distributions Tested:**
-- Ubuntu
-- Debian
-- Fedora
-- Arch Linux
+- sudo (for system control)
 
 ### macOS
 
 **Supported Features:**
-- ✅ Console clearing
-- ✅ Time checking
-- ✅ Media playback
+- ✅ All console operations
+- ✅ All time checking
+- ✅ All media playback
 - ✅ Desktop notifications
-- ✅ File operations
+- ✅ All file operations
 - ✅ System control (requires sudo)
-- ✅ Data parsing
+- ✅ All data parsing
 - ✅ Currency conversion
-- ✅ URL parsing
+- ✅ All URL operations
+- ✅ REHH web hosting
 
 **Requirements:**
 - Python 3.x
-- VLC for Mac
-- sudo access (for system control)
+- VLC
+- sudo (for system control)
+
+---
+
+## API Quick Reference
+
+### Console Module
+
+```python
+Console.clear()                                      # Clear screen
+```
+
+### System Module - Basic
+
+```python
+System.info()                                        # System information
+System.log(message)                                  # Log message
+System.openbrowserlink(url)                          # Open URL
+```
+
+### Time Checking
+
+```python
+System.sysIf.ifTimeIs(time)                         # Check exact time
+System.sysIf.ifTimeIsBefore(time)                   # Check before time
+System.sysIf.ifTimeIsAfter(time)                    # Check after time
+```
+
+### Computer Control
+
+```python
+System.computer.sleep()                              # Sleep computer
+System.computer.reboot()                             # Reboot computer
+System.computer.shutdown()                           # Shutdown computer
+```
+
+### File Operations - Read
+
+```python
+System.computer.file.read.read_file(path)           # Read text file
+System.computer.file.ensure_dir(dir, answer)        # Check/create directory
+```
+
+### File Operations - Write
+
+```python
+System.computer.file.write.write_file(path, content)     # Write text
+System.computer.file.write.write_json(path, data)        # Write JSON
+System.computer.file.write.write_csv(path, data)         # Write CSV
+System.computer.file.write.write_yaml(path, data)        # Write YAML
+```
+
+### Data Parsing - Local
+
+```python
+System.parse.file.json(filepath)                     # Parse JSON
+System.parse.file.csv(filepath)                      # Parse CSV
+System.parse.file.yaml(filepath)                     # Parse YAML
+System.parse.file.xml(filepath)                      # Parse XML
+```
+
+### Data Parsing - External
+
+```python
+System.grabexternal.parse.json(url)                  # Parse JSON from URL
+System.grabexternal.parse.csv(url)                   # Parse CSV from URL
+System.grabexternal.parse.yaml(url)                  # Parse YAML from URL
+System.grabexternal.parse.xml(url)                   # Parse XML from URL
+```
+
+### Media
+
+```python
+System.computer.playsound(location)                  # Play audio
+System.computer.playvideo(location)                  # Play video
+```
+
+### Notifications
+
+```python
+System.computer.notify(title, message, appname)      # Desktop notification
+```
+
+### Internet
+
+```python
+System.internet.convert_currency(amt, from, to)      # Convert currency
+System.internet.extract_domain(url)                  # Parse URL
+```
+
+### REHH Module
+
+```python
+REHH.start_rehh(config_path)                        # Start HTTP server
+```
 
 ---
 
@@ -1358,22 +1539,22 @@ print(System.DIP_FRAMEWORK_VERSION)  # 1.0
 
 ### File Encoding
 
-All file operations use UTF-8 encoding by default, supporting international characters.
+All file operations use UTF-8 encoding by default.
 
 ### Exception Handling
 
-All functions include built-in exception handling. Errors are caught and processed through the `retEx()` function.
+All functions include built-in exception handling via `retEx()`.
 
 ### Thread Safety
 
-The framework is not thread-safe by default. If using in multi-threaded applications, implement proper locking mechanisms.
+Not thread-safe by default. Implement locking for multi-threaded use.
 
-### Performance Considerations
+### Performance
 
-- File parsing operations are synchronous (blocking)
-- Video playback blocks execution until complete
-- Currency conversion requires network request (may be slow)
-- System control operations are immediate
+- File parsing is synchronous (blocking)
+- Video playback blocks until complete
+- Currency conversion requires network request
+- System control is immediate
 
 ---
 
@@ -1381,22 +1562,22 @@ The framework is not thread-safe by default. If using in multi-threaded applicat
 
 ### Documentation
 
-- **README:** Quick overview and getting started
-- **This Document:** Complete API reference and examples
+- **README:** Quick overview
+- **This Document:** Complete API reference
 
-### Community Support
+### Community
 
-- **GitHub Issues:** Report bugs and request features
-- **GitHub Discussions:** Ask questions and share ideas
+- **GitHub Issues:** Bug reports and features
+- **GitHub Discussions:** Questions and ideas
 
 ### Contributing
 
-We welcome contributions! See README.md for contribution guidelines.
+Contributions welcome! See README.md for guidelines.
 
 ---
 
 **DIP Framework v1.0 Documentation**
 
-*Last Updated: December 2025*
+*Last Updated: December 2024*
 
 **Made with ❤️ by the Druzhba Specifications team**
