@@ -42,6 +42,7 @@ Just use DIP Framework:
 ✅ **Currency conversion** - Convert between different currencies  
 ✅ **URL parsing** - Extract domain information from URLs  
 ✅ **Get system info** - Find out about your computer's hardware and software  
+✅ **Host websites easily** - REHH module for simple HTTP hosting  
 ✅ **Works everywhere** - Windows, Mac, and Linux support
 
 ---
@@ -50,7 +51,14 @@ Just use DIP Framework:
 
 ### Installation
 
-**Step 1:** Clone the repository
+**Step 1:** Download the latest release
+
+**For stable features (recommended):**
+- Go to [Releases](https://github.com/Druzhba-Specifications/DIP_Framework/releases)
+- Download the latest release (e.g., `v1.0.0-pre.1`)
+- Extract the files
+
+**For beta features (REHH module):**
 ```bash
 git clone https://github.com/Druzhba-Specifications/DIP_Framework.git
 cd DIP_Framework
@@ -68,6 +76,7 @@ pip install psutil requests pyyaml playsound3 python-vlc plyer freecurrencyapi
 ```python
 import System
 import Console
+import REHH
 
 # Clear the screen
 Console.clear()
@@ -89,6 +98,9 @@ System.computer.playsound("beep.mp3")
 # Read a JSON file
 data = System.parse.file.json("config.json")
 print(data)
+
+# Host a website (REHH module)
+REHH.start_rehh("config.xml")  # Starts HTTP server based on XML config
 ```
 
 ---
@@ -104,6 +116,7 @@ Quick links:
 - [File Operations](DOCUMENTATION.md#file-operations-1)
 - [Data Parsing](DOCUMENTATION.md#data-parsing)
 - [Currency Conversion](DOCUMENTATION.md#currency-conversion-1)
+- [REHH Web Hosting](DOCUMENTATION.md#rehh-module)
 
 ---
 
@@ -129,7 +142,11 @@ DIP_Framework/
 ├── LICENSE.txt                        # CC0 1.0 Universal License
 ├── System.py                          # Core system operations
 ├── Console.py                         # Console utilities
+├── REHH.py                            # Really Easy HTTP Hosting module
 ├── script.py                          # Example usage
+├── REHH/
+│   ├── example.xml                    # Example REHH config
+│   └── rehh.txt                       # REHH information
 └── DIP_Framework/
     └── log.txt                        # Application logs
 ```
@@ -145,6 +162,8 @@ DIP_Framework/
 🎵 **VLC Required** - Video playback needs VLC media player installed.
 
 🌐 **Internet Required** - Currency conversion and external data parsing need internet.
+
+📡 **REHH Module** - Beta feature for easy HTTP hosting. Use with caution in production.
 
 ---
 
