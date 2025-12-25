@@ -6,6 +6,7 @@ DIP_FRAMEWORK_VERSION = 1.0
 
 client = freecurrencyapi.Client('fca_live_Wka6rbO1pD7fslnGeLLxUkhczd94oC0BfGzIK7fL')
 
+
 class time:
     #actually fixed it lol
     @staticmethod
@@ -19,8 +20,19 @@ class time:
         return datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S %p")
 
 def retEx(e):
-    return Exception("exception: ", e)
+    raise Exception(f"exception: {e}")
 
+class Console:
+    @staticmethod
+    def clear():
+        try:
+            if os.name == 'nt':
+                os.system('cls')
+            else:
+                os.system('clear')
+        except Exception as e:
+            retEx(e)
+            
 class sysIf:
     @staticmethod
     def ifTimeIs(time):
